@@ -74,13 +74,14 @@ class BeestLex(callbacks.Plugin):
         try:
             for i in range(0, 3):
                 headword = pink + (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr
-                func_lab = green + " (" + str(dict_d[i]['fl']) + ") " + nulattr
+                func_lab = (green + " (" + str(dict_d[i]['fl']) + ") " +
+                    str(i + 1) + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
                 def_1 = def_2 = def_3 = ''
                 try:
-                    def_1 = green + "1 " + nulattr + homo_def[0]
-                    def_2 = green + " 2 " + nulattr + homo_def[1]
-                    def_3 = green + " 3 " + nulattr + homo_def[2]
+                    def_1 = green + "a: " + nulattr + homo_def[0]
+                    def_2 = "; " + green + "b: " + nulattr + homo_def[1]
+                    def_3 = "; " + green + "c: " + nulattr + homo_def[2]
                 except IndexError:
                     pass
                 irc.reply(headword + func_lab + def_1 + def_2
