@@ -84,6 +84,10 @@ class BeestLex(callbacks.Plugin):
                     def_3 = "; " + green + "c: " + nulattr + homo_def[2]
                 except IndexError:
                     pass
+                if def_3 == def_2:
+                    def_3 = ''
+                if def_2 == def_1:
+                    def_2 == ''
                 irc.reply(headword + func_lab + def_1 + def_2
                     + def_3, prefixNick=False)
         except (KeyError, IndexError):
