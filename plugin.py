@@ -1,0 +1,100 @@
+###
+# Copyright (c) 2020, Brian McCord
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#   * Redistributions of source code must retain the above copyright notice,
+#     this list of conditions, and the following disclaimer.
+#   * Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions, and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#   * Neither the name of the author of this software nor the name of
+#     contributors to this software may be used to endorse or promote products
+#     derived from this software without specific prior written consent.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+###
+
+import requests
+
+from supybot import utils, plugins, ircutils, callbacks
+from supybot.commands import *
+try:
+    from supybot.i18n import PluginInternationalization
+    _ = PluginInternationalization('BeestLex')
+except ImportError:
+    # Placeholder that allows to run the plugin on a bot
+    # without the i18n module
+    _ = lambda x: x
+
+
+class BeestLex(callbacks.Plugin):
+    """dictionary"""
+    pass
+
+
+    def lex(self, irc, msg, args, input_word):
+        """[<word>]
+            Get definitions for <word>.
+        """
+
+        mw_api = self.registryValue("MWKey")
+        dict_url = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/"
+        payload = {'key': mw_api}
+        pink = "\x0313"
+        green = "\x0303"
+        nulattr = "\x0F"
+
+        dict_d = (requests.get(dict_url + input_word, params = payload)).json()
+        full_def = ''
+
+        # silly American dictionary
+        try:
+            cognate = dict_d[0]['cxs'][0]
+            irc.reply(pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
+                nulattr + ": " + cognate['cxl'] + " " + pink + cognate['cxtis'][0]['cxt'],
+                prefixNick=False)
+        except (KeyError, IndexError, TypeError):
+            pass
+
+        # okay we'll try to get some short definitions
+        try:
+            for i in range(0, 3):
+                headword = pink + (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr
+                func_lab = green + " (" + str(dict_d[i]['fl']) + ") " + nulattr
+                homo_def = (dict_d[i]['shortdef'])
+                def_1 = def_2 = def_3 = ''
+                try:
+                    def_1 = green + "1 " + nulattr + homo_def[0]
+                    def_2 = green + " 2 " + nulattr + homo_def[1]
+                    def_3 = green + " 3 " + nulattr + homo_def[2]
+                except IndexError:
+                    pass
+                irc.reply(headword + func_lab + def_1 + def_2
+                    + def_3, prefixNick=False)
+        except (KeyError, IndexError):
+            pass
+        # halp cannot speel
+        except TypeError:
+            irc.reply(pink + 'Did you mean ' + green + dict_d[0] + ", " +
+                dict_d[1] + ", " + dict_d[2] + pink + "?")
+
+    lex = wrap(lex, ['something'])
+
+Class = BeestLex
+
+
+# vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
