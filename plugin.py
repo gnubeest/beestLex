@@ -66,7 +66,7 @@ class BeestLex(callbacks.Plugin):
         try:
             cognate = dict_d[0]['cxs'][0]
             reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
-                nulattr + ": " + cognate['cxl'] + " ")
+                nulattr + ": \x1D" + cognate['cxl'] + nulattr + " ")
             dict_d = (requests.get(dict_url + cognate['cxtis'][0]['cxt'],
                 params = payload)).json()
         except (KeyError, IndexError, TypeError):
@@ -76,7 +76,7 @@ class BeestLex(callbacks.Plugin):
         try:
             for i in range(0, 20):
                 headword = (pink + "\x02" +
-                    (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr)
+                    (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
                 func_lab = (green + " \x1D" + str(dict_d[i]['fl']) + nulattr
                     + green + " " + str(i + 1) + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
@@ -88,10 +88,10 @@ class BeestLex(callbacks.Plugin):
                 except IndexError:
                     pass
                 # cut down on upstream "imitative" entries
-                if def_3 == def_2:
-                    def_3 = ''
-                if def_2 == def_1:
-                    def_2 == ''
+                #if def_3 == def_2:
+                #    def_3 = ''
+                #if def_2 == def_1:
+                #    def_2 == ''
                 reply_build = reply_build + green + "▶" + (headword +
                     func_lab + def_1 + def_2 + def_3) + " "
         except (KeyError, IndexError):
@@ -105,7 +105,8 @@ class BeestLex(callbacks.Plugin):
                 irc.reply(green + 'Did you mean ' + pink + dict_d[0] + green
                     + "?")
             return
-        
+
+        # what is this I can't even
         if reply_build == '':
             irc.reply("I can't find a word or suggestion for " + pink +
                 input_word + nulattr + ".")
