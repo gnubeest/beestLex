@@ -71,8 +71,9 @@ class BeestLex(callbacks.Plugin):
             pass
 
         # okay we'll try to get some short definitions
+        reply_build = ''
         try:
-            for i in range(0, 3):
+            for i in range(0, 20):
                 headword = pink + (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr
                 func_lab = (green + " (" + str(dict_d[i]['fl']) + ") " +
                     str(i + 1) + nulattr)
@@ -88,14 +89,18 @@ class BeestLex(callbacks.Plugin):
                     def_3 = ''
                 if def_2 == def_1:
                     def_2 == ''
-                irc.reply(headword + func_lab + def_1 + def_2
-                    + def_3, prefixNick=False)
+                reply_build = reply_build + green + "▶" + (headword + func_lab + def_1 + def_2
+                    + def_3) + " "
         except (KeyError, IndexError):
             pass
         # halp cannot speel
         except TypeError:
             irc.reply(pink + 'Did you mean ' + green + dict_d[0] + ", " +
                 dict_d[1] + ", " + dict_d[2] + pink + "?")
+            return
+
+        reply_build = (reply_build[:-1])
+        irc.reply(reply_build, prefixNick=False)
 
     lex = wrap(lex, ['something'])
 
