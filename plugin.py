@@ -67,16 +67,18 @@ class BeestLex(callbacks.Plugin):
             cognate = dict_d[0]['cxs'][0]
             reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
                 nulattr + ": " + cognate['cxl'] + " ")
-            dict_d = (requests.get(dict_url + cognate['cxtis'][0]['cxt'], params = payload)).json()
+            dict_d = (requests.get(dict_url + cognate['cxtis'][0]['cxt'],
+                params = payload)).json()
         except (KeyError, IndexError, TypeError):
             pass
 
         # okay we'll try to get some short definitions
         try:
             for i in range(0, 20):
-                headword = pink + (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr
-                func_lab = (green + " (" + str(dict_d[i]['fl']) + ") " +
-                    str(i + 1) + nulattr)
+                headword = (pink + "\x02" +
+                    (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr)
+                func_lab = (green + " \x1D" + str(dict_d[i]['fl']) + nulattr
+                    + green + " " + str(i + 1) + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
                 def_1 = def_2 = def_3 = ''
                 try:
@@ -90,8 +92,8 @@ class BeestLex(callbacks.Plugin):
                     def_3 = ''
                 if def_2 == def_1:
                     def_2 == ''
-                reply_build = reply_build + green + "▶" + (headword + func_lab + def_1 + def_2
-                    + def_3) + " "
+                reply_build = reply_build + green + "▶" + (headword +
+                    func_lab + def_1 + def_2 + def_3) + " "
         except (KeyError, IndexError):
             pass
         # halp cannot speel
