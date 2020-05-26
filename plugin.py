@@ -77,9 +77,13 @@ class BeestLex(callbacks.Plugin):
             for i in range(0, 20):
                 headword = (pink + "\x02" +
                     (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
-                func_lab = (green + " \x1D" + str(dict_d[i]['fl']) + nulattr
-                    + green + " " + str(i + 1) + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
+                try:
+                    homo_sls = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]['sls'][0])
+                except (KeyError, TypeError):
+                    homo_sls = ''
+                func_lab = (green + " \x1D" + str(dict_d[i]['fl']) +
+                    homo_sls + nulattr + " " + str(i + 1) + nulattr)
                 def_1 = def_2 = def_3 = ''
                 try:
                     def_1 = green + ": " + nulattr + homo_def[0]
