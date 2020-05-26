@@ -62,7 +62,7 @@ class BeestLex(callbacks.Plugin):
         full_def = ''
         reply_build = ''
 
-        # silly American dictionary
+        # add cognate redirection for silly American dictionary
         try:
             cognate = dict_d[0]['cxs'][0]
             reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
@@ -80,11 +80,12 @@ class BeestLex(callbacks.Plugin):
                 homo_def = (dict_d[i]['shortdef'])
                 def_1 = def_2 = def_3 = ''
                 try:
-                    def_1 = green + "a: " + nulattr + homo_def[0]
-                    def_2 = "; " + green + "b: " + nulattr + homo_def[1]
-                    def_3 = "; " + green + "c: " + nulattr + homo_def[2]
+                    def_1 = green + ": " + nulattr + homo_def[0]
+                    def_2 = "; " + green + str(i + 1) + "b: " + nulattr + homo_def[1]
+                    def_3 = "; " + green + str(i + 1) + "c: " + nulattr + homo_def[2]
                 except IndexError:
                     pass
+                # cut down on upstream "imitative" entries
                 if def_3 == def_2:
                     def_3 = ''
                 if def_2 == def_1:
@@ -95,12 +96,19 @@ class BeestLex(callbacks.Plugin):
             pass
         # halp cannot speel
         except TypeError:
-            irc.reply(pink + 'Did you mean ' + green + dict_d[0] + ", " +
-                dict_d[1] + ", " + dict_d[2] + pink + "?")
+            try:
+                irc.reply(green + 'Did you mean ' + pink + dict_d[0] + ", " +
+                    dict_d[1] + ", " + dict_d[2] + green + "?")
+            except IndexError:
+                irc.reply(green + 'Did you mean ' + pink + dict_d[0] + green
+                    + "?")
             return
-
-        reply_build = (reply_build[:-1])
-        irc.reply(reply_build, prefixNick=False)
+        
+        if reply_build == '':
+            irc.reply("I can't find a word or suggestion for " + pink +
+                input_word + nulattr + ".")
+        else:
+            irc.reply(reply_build, prefixNick=False)
 
     lex = wrap(lex, ['something'])
 
