@@ -60,18 +60,18 @@ class BeestLex(callbacks.Plugin):
 
         dict_d = (requests.get(dict_url + input_word, params = payload)).json()
         full_def = ''
+        reply_build = ''
 
         # silly American dictionary
         try:
             cognate = dict_d[0]['cxs'][0]
-            irc.reply(pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
-                nulattr + ": " + cognate['cxl'] + " " + pink + cognate['cxtis'][0]['cxt'],
-                prefixNick=False)
+            reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
+                nulattr + ": " + cognate['cxl'] + " ")
+            dict_d = (requests.get(dict_url + cognate['cxtis'][0]['cxt'], params = payload)).json()
         except (KeyError, IndexError, TypeError):
             pass
 
         # okay we'll try to get some short definitions
-        reply_build = ''
         try:
             for i in range(0, 20):
                 headword = pink + (dict_d[0]['hwi']['hw']).replace("*", "") + nulattr
