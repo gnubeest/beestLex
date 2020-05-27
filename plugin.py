@@ -42,7 +42,7 @@ except ImportError:
 
 
 class BeestLex(callbacks.Plugin):
-    """dictionary"""
+    """IRC-legible Merriam-Webster dictionary"""
     pass
 
 
@@ -59,10 +59,9 @@ class BeestLex(callbacks.Plugin):
         nulattr = "\x0F"
 
         dict_d = (requests.get(dict_url + input_word, params = payload)).json()
-        full_def = ''
         reply_build = ''
 
-        # add cognate redirection for silly American dictionary
+        # add cognate redirection (mostly for silly American dictionary)
         try:
             cognate = dict_d[0]['cxs'][0]
             reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
@@ -72,18 +71,24 @@ class BeestLex(callbacks.Plugin):
         except (KeyError, IndexError, TypeError):
             pass
 
-        # okay we'll try to get some short definitions
+        # okay we'll try to get some definitions
         try:
             for i in range(0, 20):
                 headword = (pink + "\x02" +
                     (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
+                # main entry, status labels
+                homo_sls1 = homo_sls2 = ''
                 try:
-                    homo_sls = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]['sls'][0])
-                except (KeyError, TypeError):
-                    homo_sls = ''
+                    homo_sls1 = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]
+                        ['sls'][0])
+                    homo_sls2 = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]
+                        ['sls'][1])
+                except (KeyError, TypeError, IndexError):
+                    pass
                 func_lab = (green + " \x1D" + str(dict_d[i]['fl']) +
-                    homo_sls + nulattr + green + " " + str(i + 1))
+                    homo_sls1 + homo_sls2 + nulattr + green + " " + str(i + 1))
+                # B status labels
                 sls_b1 = sls_b2 = ''
                 try:
                     sls_b1 = "\x1D " + (dict_d[i]['def'][0]['sseq'][1][0][1]
@@ -92,6 +97,7 @@ class BeestLex(callbacks.Plugin):
                         ['sls'][1])
                 except:
                     pass
+                # C status labels
                 sls_c1 = sls_c2 = ''
                 try:
                     sls_c1 = "\x1D " + (dict_d[i]['def'][0]['sseq'][2][0][1]
@@ -100,6 +106,7 @@ class BeestLex(callbacks.Plugin):
                         ['sls'][1])
                 except:
                     pass
+                # build an entry set
                 def_1 = def_2 = def_3 = ''
                 try:
                     def_1 = ": " + nulattr + homo_def[0]
@@ -113,25 +120,19 @@ class BeestLex(callbacks.Plugin):
                     func_lab + def_1 + def_2 + def_3) + " "
         except (KeyError, IndexError):
             pass
-        # halp cannot speel
+        # halp cannot speel, maek suggest
         except TypeError:
-            #try:
-            #    irc.reply(green + 'Did you mean ' + pink + dict_d[0] + ", " +
-            #        dict_d[1] + ", " + dict_d[2] + green + "?")
-            #except IndexError:
-            #    irc.reply(green + 'Did you mean ' + pink + dict_d[0] + green
-            #        + "?")
-            #return
             irc.reply(green + 'Did you mean ' + pink +
                 ((str(dict_d)).translate
                 (str.maketrans({'[': '', ']': ''}))) + green
                 + "?")
             return
 
-        # what is this I can't even
+        # can't do anything with silly user's input
         if reply_build == '':
             irc.reply("I can't find a word or suggestion for " + pink +
                 input_word + nulattr + ".")
+        # if there's a definition, show it
         else:
             irc.reply(reply_build, prefixNick=False)
 
