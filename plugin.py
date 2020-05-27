@@ -83,19 +83,32 @@ class BeestLex(callbacks.Plugin):
                 except (KeyError, TypeError):
                     homo_sls = ''
                 func_lab = (green + " \x1D" + str(dict_d[i]['fl']) +
-                    homo_sls + nulattr + " " + str(i + 1) + nulattr)
+                    homo_sls + nulattr + green + " " + str(i + 1))
+                sls_b1 = sls_b2 = ''
+                try:
+                    sls_b1 = "\x1D " + (dict_d[i]['def'][0]['sseq'][1][0][1]
+                        ['sls'][0])
+                    sls_b2 = ", " + (dict_d[i]['def'][0]['sseq'][1][0][1]
+                        ['sls'][1])
+                except:
+                    pass
+                sls_c1 = sls_c2 = ''
+                try:
+                    sls_c1 = "\x1D " + (dict_d[i]['def'][0]['sseq'][2][0][1]
+                        ['sls'][0])
+                    sls_c2 = ", " + (dict_d[i]['def'][0]['sseq'][2][0][1]
+                        ['sls'][1])
+                except:
+                    pass
                 def_1 = def_2 = def_3 = ''
                 try:
-                    def_1 = green + ": " + nulattr + homo_def[0]
-                    def_2 = "; " + green + str(i + 1) + "b: " + nulattr + homo_def[1]
-                    def_3 = "; " + green + str(i + 1) + "c: " + nulattr + homo_def[2]
+                    def_1 = ": " + nulattr + homo_def[0]
+                    def_2 = "; " + green + str(i + 1) + "b:" + (sls_b1 +
+                        sls_b2 + " " + nulattr + homo_def[1])
+                    def_3 = "; " + green + str(i + 1) + "c:" + (sls_c1 + 
+                        sls_c2 + " " + nulattr + homo_def[2])
                 except IndexError:
                     pass
-                # cut down on upstream "imitative" entries
-                #if def_3 == def_2:
-                #    def_3 = ''
-                #if def_2 == def_1:
-                #    def_2 == ''
                 reply_build = reply_build + green + "▶" + (headword +
                     func_lab + def_1 + def_2 + def_3) + " "
         except (KeyError, IndexError):
