@@ -115,12 +115,17 @@ class BeestLex(callbacks.Plugin):
             pass
         # halp cannot speel
         except TypeError:
-            try:
-                irc.reply(green + 'Did you mean ' + pink + dict_d[0] + ", " +
-                    dict_d[1] + ", " + dict_d[2] + green + "?")
-            except IndexError:
-                irc.reply(green + 'Did you mean ' + pink + dict_d[0] + green
-                    + "?")
+            #try:
+            #    irc.reply(green + 'Did you mean ' + pink + dict_d[0] + ", " +
+            #        dict_d[1] + ", " + dict_d[2] + green + "?")
+            #except IndexError:
+            #    irc.reply(green + 'Did you mean ' + pink + dict_d[0] + green
+            #        + "?")
+            #return
+            irc.reply(green + 'Did you mean ' + pink +
+                ((str(dict_d)).translate
+                (str.maketrans({'[': '', ']': ''}))) + green
+                + "?")
             return
 
         # what is this I can't even
