@@ -1,6 +1,6 @@
 # beestLex
 
-## simple, IRC-legible US English dictionary definitions for Limnoria
+## simple, IRC-legible English dictionary definitions for Limnoria
 
 ### requires
 
@@ -11,11 +11,15 @@ Python 3, Limnoria, Requests, and a [Merriam-Webster Dictionary API key](https:/
 ```lex <word>```
 
 
-The overall goal is to balance completeness with concise IRC legibility. More
-definition features may be added, but keeping it lean and mean is the order
-of the day. Reducing everything to a one-liner while letting Limnoria's `more`
-do most of the work (and using colors/attributes and icons to aid reading)
-seems to be the ideal solution right now, but this may change in the future.
+The overall goal is to balance completeness with concise IRC legibility.
+Reducing everything to a one-liner while letting Limnoria's `more` do most
+of the work (and using colors/attributes and icons to aid reading) seems to
+be the ideal solution right now, but this may change in the future.
+Additional features may be added but generally kept to a minimum in order to
+maximise readability and usefulness on IRC.
 
-Horrible code probably full of bugs and edge-cases I haven't spotted yet, but
-works well enough thus far. Thesaurus is probably upcoming.
+This will likely remain incompetently-crafted spaghetti code and is probably
+full of bugs and edge-cases I haven't spotted yet, but it works well enough
+thus far. The MW API continues to be both wonderful and horrific (probably by
+necessity) requiring a lot of mitigation to work smoothly with minimum
+end-user intervention on a display medium like IRC.
