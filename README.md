@@ -20,6 +20,4 @@ maximise readability and usefulness on IRC.
 
 This will likely remain incompetently-crafted spaghetti code and is probably
 full of bugs and edge-cases I haven't spotted yet, but it works well enough
-thus far. The MW API continues to be both wonderful and horrific (probably by
-necessity) requiring a lot of mitigation to work smoothly with minimum
-end-user intervention on a display medium like IRC.
+thus far.

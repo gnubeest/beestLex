@@ -42,13 +42,13 @@ except ImportError:
 
 
 class BeestLex(callbacks.Plugin):
-    """IRC-legible Merriam-Webster dictionary"""
+    """IRC-legible dictionary"""
     pass
 
 
     def lex(self, irc, msg, args, input_word):
-        """[<word>]
-            Get definitions for <word>.
+        """[<input>]
+            Get English definitions for <input>.
         """
 
         mw_api = self.registryValue("MWKey")
@@ -58,16 +58,16 @@ class BeestLex(callbacks.Plugin):
         green = "\x0303"
         nulattr = "\x0F"
 
-        dict_d = (requests.get(dict_url + input_word, params = payload)).json()
+        dict_d = (requests.get(dict_url + input_word, params=payload)).json()
         reply_build = ''
 
-        # add cognate redirection (mostly for silly American dictionary)
+        # automatic redirection
         try:
             cognate = dict_d[0]['cxs'][0]
             reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
-                nulattr + ": \x1D" + cognate['cxl'] + nulattr + " ")
+                           nulattr + ": \x1D" + cognate['cxl'] + nulattr + " ")
             dict_d = (requests.get(dict_url + cognate['cxtis'][0]['cxt'],
-                params = payload)).json()
+                                    params=payload)).json()
         except (KeyError, IndexError, TypeError):
             pass
 
@@ -75,13 +75,13 @@ class BeestLex(callbacks.Plugin):
         try:
             for i in range(0, 20):
                 headword = (pink + "\x02" +
-                    (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
+                        (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
                 # main entry, status labels
                 homo_sls1 = homo_sls2 = ''
                 try:
                     homo_sls1 = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]
-                        ['sls'][0])
+                                        ['sls'][0])
                     homo_sls2 = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]
                         ['sls'][1])
                 except (KeyError, TypeError, IndexError):
@@ -112,7 +112,7 @@ class BeestLex(callbacks.Plugin):
                     def_1 = ": " + nulattr + homo_def[0]
                     def_2 = "; " + green + str(i + 1) + "b:" + (sls_b1 +
                         sls_b2 + " " + nulattr + homo_def[1])
-                    def_3 = "; " + green + str(i + 1) + "c:" + (sls_c1 + 
+                    def_3 = "; " + green + str(i + 1) + "c:" + (sls_c1 +
                         sls_c2 + " " + nulattr + homo_def[2])
                 except IndexError:
                     pass
@@ -136,7 +136,7 @@ class BeestLex(callbacks.Plugin):
         else:
             irc.reply(reply_build, prefixNick=False)
 
-    lex = wrap(lex, ['something'])
+    lex = wrap(lex, ['text'])
 
 Class = BeestLex
 
