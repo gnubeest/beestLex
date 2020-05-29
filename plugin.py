@@ -51,6 +51,10 @@ class BeestLex(callbacks.Plugin):
             Get English definitions for <input>.
         """
 
+        if input_word == "":
+            irc.error('received null input')
+            return
+
         mw_api = self.registryValue("MWKey")
         dict_url = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/"
         payload = {'key': mw_api}
