@@ -52,7 +52,7 @@ class BeestLex(callbacks.Plugin):
         """
 
         if input_word == "":
-            irc.error('received null input')
+            irc.error('Received null input')
             return
 
         mw_api = self.registryValue("MWKey")
@@ -126,10 +126,9 @@ class BeestLex(callbacks.Plugin):
             pass
         # halp cannot speel, maek suggest
         except TypeError:
-            irc.reply(green + 'Did you mean ' + pink +
+            irc.reply(green + 'Did you mean: ' + pink +
                 ((str(dict_d)).translate
-                (str.maketrans({'[': '', ']': ''}))) + green
-                + "?")
+                (str.maketrans({',': '', '[': '', ']': ''}))))
             return
 
         # can't do anything with silly user's input
