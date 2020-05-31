@@ -71,7 +71,7 @@ class BeestLex(callbacks.Plugin):
             reply_build = (pink + (dict_d[0]['hwi']['hw']).replace("*", "") +
                            nulattr + ": \x1D" + cognate['cxl'] + nulattr + " ")
             dict_d = (requests.get(dict_url + cognate['cxtis'][0]['cxt'],
-                                    params=payload)).json()
+                                   params=payload)).json()
         except (KeyError, IndexError, TypeError):
             pass
 
@@ -79,7 +79,7 @@ class BeestLex(callbacks.Plugin):
         try:
             for i in range(0, 20):
                 headword = (pink + "\x02" +
-                        (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
+                            (dict_d[i]['hwi']['hw']).replace("*", "") + nulattr)
                 homo_def = (dict_d[i]['shortdef'])
                 # main entry, status labels
                 homo_sls1 = homo_sls2 = ''
@@ -87,54 +87,55 @@ class BeestLex(callbacks.Plugin):
                     homo_sls1 = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]
                                         ['sls'][0])
                     homo_sls2 = ", " + (dict_d[i]['def'][0]['sseq'][0][0][1]
-                        ['sls'][1])
+                                        ['sls'][1])
                 except (KeyError, TypeError, IndexError):
                     pass
                 func_lab = (green + " \x1D" + str(dict_d[i]['fl']) +
-                    homo_sls1 + homo_sls2 + nulattr + green + " " + str(i + 1))
+                            homo_sls1 + homo_sls2 + nulattr + green + " " +
+                            str(i + 1))
                 # B status labels
                 sls_b1 = sls_b2 = ''
                 try:
                     sls_b1 = "\x1D " + (dict_d[i]['def'][0]['sseq'][1][0][1]
-                        ['sls'][0])
+                                        ['sls'][0])
                     sls_b2 = ", " + (dict_d[i]['def'][0]['sseq'][1][0][1]
-                        ['sls'][1])
+                                     ['sls'][1])
                 except:
                     pass
                 # C status labels
                 sls_c1 = sls_c2 = ''
                 try:
                     sls_c1 = "\x1D " + (dict_d[i]['def'][0]['sseq'][2][0][1]
-                        ['sls'][0])
+                                        ['sls'][0])
                     sls_c2 = ", " + (dict_d[i]['def'][0]['sseq'][2][0][1]
-                        ['sls'][1])
+                                     ['sls'][1])
                 except:
                     pass
                 # build an entry set
                 def_1 = def_2 = def_3 = ''
                 try:
                     def_1 = ": " + nulattr + homo_def[0]
-                    def_2 = "; " + green + str(i + 1) + "b:" + (sls_b1 +
-                        sls_b2 + " " + nulattr + homo_def[1])
-                    def_3 = "; " + green + str(i + 1) + "c:" + (sls_c1 +
-                        sls_c2 + " " + nulattr + homo_def[2])
+                    def_2 = ("; " + green + str(i + 1) + "b:" + sls_b1 +
+                             sls_b2 + " " + nulattr + homo_def[1])
+                    def_3 = ("; " + green + str(i + 1) + "c:" + sls_c1 +
+                             sls_c2 + " " + nulattr + homo_def[2])
                 except IndexError:
                     pass
-                reply_build = reply_build + green + "▶" + (headword +
-                    func_lab + def_1 + def_2 + def_3) + " "
+                reply_build = (reply_build + green + "▶" + headword +
+                               func_lab + def_1 + def_2 + def_3 + " ")
         except (KeyError, IndexError):
             pass
         # halp cannot speel, maek suggest
         except TypeError:
             irc.reply(green + 'Did you mean: ' + pink +
-                ((str(dict_d)).translate
-                (str.maketrans({',': '', '[': '', ']': ''}))))
+                      ((str(dict_d)).translate
+                      (str.maketrans({',': '', '[': '', ']': ''}))))
             return
 
         # can't do anything with silly user's input
         if reply_build == '':
             irc.reply("I can't find a word or suggestion for " + pink +
-                input_word + nulattr + ".")
+                      input_word + nulattr + ".")
         # if there's a definition, show it
         else:
             irc.reply(reply_build, prefixNick=False)
