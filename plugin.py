@@ -69,7 +69,7 @@ class BeestLex(callbacks.Plugin):
         except TypeError:
             syn_cog = syn_d[0]
             syn_d = (requests.get(syn_url + syn_cog, params=payload)).json()
-        except NameError:
+        except IndexError:
             irc.reply("I can't find synonyms for " + pink +
                       input_word + nulattr + ".")
             return
