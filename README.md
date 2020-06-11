@@ -10,7 +10,6 @@ Python 3, Limnoria, Requests, and a [Merriam-Webster Dictionary API key](https:/
 
 ```lex <word>```
 
-
 The overall goal is to balance completeness with concise IRC legibility.
 Reducing everything to a one-liner while letting Limnoria's `more` do most
 of the work (and using colors/attributes and icons to aid reading) seems to
@@ -21,3 +20,6 @@ maximise readability and usefulness on IRC.
 This will likely remain incompetently-crafted spaghetti code and is probably
 full of bugs and edge-cases I haven't spotted yet, but it works well enough
 thus far.
+
+Basic thesaurus lookups are available with an accompanying MW Thesaurus key
+by using ```syn```.

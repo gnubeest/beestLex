@@ -49,7 +49,9 @@ def configure(advanced):
 
 BeestLex = conf.registerPlugin('BeestLex')
 conf.registerGlobalValue(BeestLex, 'MWKey',
-    registry.String('', """API key from dictionaryapi.com"""))
+    registry.String('', """Dictionary API key from dictionaryapi.com"""))
+conf.registerGlobalValue(BeestLex, 'MWThesKey',
+    registry.String('', """Thesaurus API key from dictionaryapi.com"""))
 
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

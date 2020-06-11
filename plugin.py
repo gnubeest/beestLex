@@ -40,10 +40,63 @@ except ImportError:
     # without the i18n module
     _ = lambda x: x
 
+pink = "\x0313"
+green = "\x0303"
+nulattr = "\x0F"
+bullet = " \x0303•\x0f "
 
 class BeestLex(callbacks.Plugin):
     """IRC-legible dictionary"""
     pass
+
+
+    def syn(self, irc, msg, args, input_word):
+        """[<input>]
+            Get English synonyms for <input>.
+        """
+
+        if input_word == "":
+            irc.error('Received null input')
+            return
+
+        mw_api = self.registryValue("MWThesKey")
+        syn_url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/"
+        payload = {'key': mw_api}
+        syn_d = (requests.get(syn_url + input_word, params=payload)).json()
+
+        try:
+            syn_test = syn_d[0]['meta']['syns']
+        except TypeError:
+            syn_cog = syn_d[0]
+            syn_d = (requests.get(syn_url + syn_cog, params=payload)).json()
+        except NameError:
+            irc.reply("I can't find synonyms for " + pink +
+                      input_word + nulattr + ".")
+            return
+
+
+        def syn_bld(in_word):
+            syn_out = ''
+            for idx in range(0, 10):
+                try:
+                    hword = (pink + '\x02' + syn_d[idx]['hwi']['hw'] + nulattr)
+                    syn_def = syn_d[idx]['shortdef'][0]
+                    syn_lst = syn_d[idx]['meta']['syns'][0]
+                    syn_lst = ', '.join(syn_lst)
+                    syn_out = (syn_out + green + '▶' + hword + green +
+                               " \x1D" + syn_def + " " + nulattr + syn_lst + " ")
+                except IndexError:
+                    pass
+            return syn_out 
+
+        syn_print = syn_bld(syn_d)
+        irc.reply(syn_print)
+
+
+    syn = wrap(syn, ['text'])
+
+
+
 
 
     def lex(self, irc, msg, args, input_word):
@@ -58,9 +111,6 @@ class BeestLex(callbacks.Plugin):
         mw_api = self.registryValue("MWKey")
         dict_url = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/"
         payload = {'key': mw_api}
-        pink = "\x0313"
-        green = "\x0303"
-        nulattr = "\x0F"
 
         dict_d = (requests.get(dict_url + input_word, params=payload)).json()
         reply_build = ''
