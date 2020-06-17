@@ -45,6 +45,7 @@ green = "\x0303"
 nulattr = "\x0F"
 bullet = " \x0303•\x0f "
 
+
 class BeestLex(callbacks.Plugin):
     """IRC-legible dictionary"""
     pass
@@ -74,7 +75,6 @@ class BeestLex(callbacks.Plugin):
                       input_word + nulattr + ".")
             return
 
-
         def syn_bld(in_word):
             syn_out = ''
             for idx in range(0, 10):
@@ -92,11 +92,7 @@ class BeestLex(callbacks.Plugin):
         syn_print = syn_bld(syn_d)
         irc.reply(syn_print)
 
-
     syn = wrap(syn, ['text'])
-
-
-
 
 
     def lex(self, irc, msg, args, input_word):
@@ -192,7 +188,8 @@ class BeestLex(callbacks.Plugin):
 
     lex = wrap(lex, ['text'])
 
+
 Class = BeestLex
 
-
+# satan is calling you to eat less gluten
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
