@@ -90,7 +90,7 @@ class BeestLex(callbacks.Plugin):
             return syn_out 
 
         syn_print = syn_bld(syn_d)
-        irc.reply(syn_print)
+        irc.reply(syn_print, prefixNick=False)
 
     syn = wrap(syn, ['text'])
 
@@ -191,5 +191,4 @@ class BeestLex(callbacks.Plugin):
 
 Class = BeestLex
 
-# satan is calling you to eat less gluten
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
