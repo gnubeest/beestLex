@@ -29,6 +29,7 @@
 ###
 
 import requests
+import re
 
 from supybot import utils, plugins, ircutils, callbacks
 from supybot.commands import *
@@ -184,7 +185,10 @@ class BeestLex(callbacks.Plugin):
                       input_word + nulattr + ".")
         # if there's a definition, show it
         else:
-            irc.reply(reply_build, prefixNick=False)
+            regex = r"\{.+?\|(.*?)\|.*?\}" # MW tags gotta go
+            subst = "\\1"
+            reply_final = re.sub(regex, subst, reply_build, 0)
+            irc.reply(reply_final, prefixNick=False)
 
     lex = wrap(lex, ['text'])
 
