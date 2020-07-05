@@ -68,11 +68,17 @@ class BeestLex(callbacks.Plugin):
             irc.reply("I can't find etymology for " + pink +
                       input_word + nulattr + ".")
             return
+
         ety_str = (ety_base.strip().replace('{it}', '\x0303\x1D')
                    .replace('{/it}', '\x0F')
-                   .replace('{et_link|-y:2|-y:2}', '-y')
-                   .replace('{ma}{mat|', '(see \x0303\x1D')
+                   .replace('{ma}{mat|', '(see \x0303')
                    .replace('|}{/ma}', '\x0F)'))
+
+        regex = r"{et_link\|(.*?):*\d*\|.*?}"
+        subst = "🐻\\1🐶"
+        ety_str = re.sub(regex, subst, ety_str, 0)        
+        ety_str = ety_str.replace('🐻', '\x0303').replace('🐶', '\x0F')
+
         hword = (pink + '\x02' + dict_d[0]['hwi']['hw'].replace("*", "")
                  + nulattr)
         reply_str = (green + "▶" + hword + ' ' + ety_str)
