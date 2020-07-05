@@ -52,6 +52,35 @@ class BeestLex(callbacks.Plugin):
     pass
 
 
+    def ety(self, irc, msg, args, input_word):
+        """[<input>]
+            Get etymologies for <input>.
+        """
+
+        mw_api = self.registryValue("MWKey")
+        dict_url = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/"
+        payload = {'key': mw_api}
+        dict_d = (requests.get(dict_url + input_word, params=payload)).json()
+
+        try:
+            ety_base = dict_d[0]['et'][0][1]
+        except KeyError:
+            irc.reply("I can't find etymology for " + pink +
+                      input_word + nulattr + ".")
+            return
+        ety_str = (ety_base.strip().replace('{it}', '\x0303\x1D')
+                   .replace('{/it}', '\x0F')
+                   .replace('{et_link|-y:2|-y:2}', '-y')
+                   .replace('{ma}{mat|', '(see \x0303\x1D')
+                   .replace('|}{/ma}', '\x0F)'))
+        hword = (pink + '\x02' + dict_d[0]['hwi']['hw'].replace("*", "")
+                 + nulattr)
+        reply_str = (green + "▶" + hword + ' ' + ety_str)
+        irc.reply(reply_str, prefixNick=False)
+
+    ety = wrap(ety, ['text'])
+
+
     def syn(self, irc, msg, args, input_word):
         """[<input>]
             Get English synonyms for <input>.

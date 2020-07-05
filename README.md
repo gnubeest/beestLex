@@ -21,5 +21,8 @@ This will likely remain incompetently-crafted spaghetti code and is probably
 full of bugs and edge-cases I haven't spotted yet, but it works well enough
 thus far.
 
+```ety <word>``` gives word etymologies. This is probably full of boogs at
+the moment.
+
 Basic thesaurus lookups are available with an accompanying MW Thesaurus key
 by using ```syn```.
